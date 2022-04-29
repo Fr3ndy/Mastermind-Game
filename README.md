@@ -7,7 +7,7 @@
 
 -Programming languages:Html-JavaScript-Css
 
-Version 1.0 
+Version 1.1.2 
 Completed 70%
 
 soon:
