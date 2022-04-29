@@ -1,0 +1,247 @@
+<html>
+<head>
+    <meta name="viewport" content="width=device-width">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>       
+    <div class="messaggio" id="mess">
+        <div style="flex-grow: 1;"></div>
+        
+        
+    </div> 
+    <div class="pagina1" id="pagina1">
+        <h1>Mastermind</h1>
+        <h3>Scegli la combinazione da far indovinare<br>Giocatore 1</h3>
+        <div class="tabella">
+            <div style="display: flex; flex-direction: column;">
+                <div style="height: 10em;"></div> 
+                <div class="riga-colori" style=" margin-bottom: 1em;" id="selezionecolori">
+                    <a class="riga-colonna bordo" id="c0"></a>
+                    <a class="riga-colonna bordo" id="c1"></a>
+                    <a class="riga-colonna bordo" id="c2"></a>
+                    <a class="riga-colonna bordo" id="c3"></a>
+                    <a class="riga-colonna bordo" id="c4"></a>
+                    <a class="riga-colonna bordo" id="c5"></a>
+                    <a class="riga-colonna bordo" id="c6"></a>
+                    <a class="riga-colonna bordo" id="c7"></a>
+                    
+                </div>                 
+            </div>
+            <div class="colori">
+                <button class="colore b" id="bb" onclick="selettore('b')"></button>
+                <button class="colore y" id="by" onclick="selettore('y')"></button>
+                <button class="colore g" id="bg" onclick="selettore('g')"></button>
+                <button class="colore r" id="br" onclick="selettore('r')"></button>
+                <button class="colore n" id="bn" onclick="selettore('n')"></button>
+                <button class="colore m" id="bm" onclick="selettore('m')"></button>
+                <button class="colore br" id="bbr" onclick="selettore('br')"></button>
+                <button class="colore w" id="bw" onclick="selettore('w')"></button>
+                <button class="colore l" id="bl" onclick="selettore('l')"></button>
+                <button class="colore c" id="bc" onclick="selettore('c')"></button>
+            </div>
+            <div class="pulsanti">
+                <a class="buttones r" onclick="location.href='contro.html'">Abbandona</a>
+                <a class="buttones" style="background-color: orange;" onclick="reset()">Reset</a>
+                <a class="buttones g" onclick="genera()">genera</a>
+            </div>
+        </div> 
+    </div>
+    <div class="Pagina1" style="display: none;" id="pagina2">
+            <h1>Mastermind</h1> 
+            <h3>Indovina la combinazione<br>Giocatore 2</h3>    
+            <div class="tabella">
+                <div style="display: flex; flex-direction: column;">
+                    <div class="colonne" id="colonnacolori">        
+                        
+                    </div>    
+                    <div class="riga-colori" style=" margin-bottom: 1em;" id="selezionecolori">
+                        <a class="riga-colonna bordo" id="c0"></a>
+                        <a class="riga-colonna bordo" id="c1"></a>
+                        <a class="riga-colonna bordo" id="c2"></a>
+                        <a class="riga-colonna bordo" id="c3"></a>
+                        <a class="riga-colonna bordo" id="c4"></a>
+                        <a class="riga-colonna bordo" id="c5"></a>
+                        <a class="riga-colonna bordo" id="c6"></a>
+                        <a class="riga-colonna bordo" id="c7"></a>
+                    </div>                 
+                </div>
+                <div class="colori">
+                    <button class="colore b" id="bb" onclick="selettore('b')"></button>
+                    <button class="colore y" id="by" onclick="selettore('y')"></button>
+                    <button class="colore g" id="bg" onclick="selettore('g')"></button>
+                    <button class="colore r" id="br" onclick="selettore('r')"></button>
+                    <button class="colore n" id="bn" onclick="selettore('n')"></button>
+                    <button class="colore m" id="bm" onclick="selettore('m')"></button>
+                    <button class="colore br" id="bbr" onclick="selettore('br')"></button>
+                    <button class="colore w" id="bw" onclick="selettore('w')"></button>
+                    <button class="colore l" id="bl" onclick="selettore('l')"></button>
+                    <button class="colore c" id="bc" onclick="selettore('c')"></button>
+                </div>
+                <div class="pulsanti">
+                    <a class="buttones r" onclick="location.href='contro.html'">Abbandona</a>
+                    <a class="buttones" style="background-color: orange;" onclick="reset()">Reset</a>
+                    <a class="buttones g" onclick="verifica()">Check</a>
+                </div>
+            </div> 
+    </div>
+</body>
+</html>
+
+<script>
+    var nc=8;                      //numero colori
+    var t=5;                        //numero tentativi
+    var tent=0;
+    var v=0;
+    var array=[]
+
+    var check=0;
+    
+
+    var temparray=[]; 
+    
+    
+
+    
+
+    function selettore(c){       
+        if(v!=nc){
+            var id="c"+v
+            var s=document.getElementById(id)
+            s.classList.add(c)
+            var idb="b"+c
+            document.getElementById(idb).disabled = true
+            array[v]=c
+            v++
+        }
+    }
+
+    function reset(){
+        for(var i=0;i!=nc;i++){
+            var id="c"+(i);
+            var s=document.getElementById(id)
+            s.classList.remove('b','y','g','r','n','m','br','w','l','c')
+            v=0
+            array[i]="";
+        }
+        for(var i=0;i!=10;i++){
+            var a=["bb","by","bg","br","bn",'bm','bbr','bw','bl','bc']
+            document.getElementById(a[i]).disabled = false
+        }
+        check=0
+    }
+    
+    function verifica(){
+        if(v==nc){
+            var node=""
+            for(var i=0;i!=nc;i++){
+
+
+
+                chech=0
+                //verifica posizione
+                if(array[i]==temparray[i]){
+                    node += "<a class=\"riga-colonna err3 "+array[i]+"\" ></a>"
+                    check++
+                }else if(temparray.includes(array[i])){
+                    node += "<a class=\"riga-colonna err2 "+array[i]+"\" ></a>"
+                    
+                }else{
+                    node += "<a class=\"riga-colonna err1 "+array[i]+"\" ></a>"
+                    
+                }
+                
+            }
+            node="<div class=\"riga-colori\">"+node+"</div>"
+
+            document.getElementById("colonnacolori").innerHTML+=node;
+            // alert(check)
+            
+            tentativi()
+            reset()
+        }else{
+            //non hai inserito tutti i colori
+        }
+    }
+
+    function tentativi(){
+        tent++;
+        if(check==nc){
+            document.getElementById("mess").style.display = "flex"
+            document.getElementById("mess").style.backgroundColor ="#c0ffba"
+
+            document.getElementById("mess").innerHTML += " <h1>Hai Vinto</h1>"+
+       " <div style=\"flex-grow: 1;\"></div>"+
+        "<h3>Complimenti hai usato "+tent+" su "+t+ " tentativi</h3>"+
+        "<h4>Hai vinto giocatore 2</h4>"+
+       " <p>Combinazione corretta</p>"+
+        "<div class=\"riga-colori\">"+comb()+
+        "</div>"+
+        "<div style=\"flex-grow: 1;\"></div>"+
+        "<div class=\"pulsanti\" style=\"justify-content: space-around;\">"+
+            "<a class=\"buttones r\" onClick=\"document.location.reload(true)\" style=\"height: 4em; background-color: orange;\">Riprova</a>"+
+            "<a class=\"buttones r\" style=\"height: 4em;\" href=\"index.html\">Abbandona</a>"+
+        "</div>"+
+        "<div style=\"flex-grow: 1;\"></div>"
+        ;  
+        }else if(tent==t){
+            document.getElementById("mess").style.display = "flex"
+            document.getElementById("mess").style.backgroundColor ="#ff6666"
+
+
+            document.getElementById("mess").innerHTML += " <h1>Non hai vinto</h1>"+
+       " <div style=\"flex-grow: 1;\"></div>"+
+        "<h3>Hai usato tutti i "+t+" tentativi</h3>"+
+        "<h4>Hai vinto giocatore 1</h4>"+
+       " <p>Combinazione corretta</p>"+
+        "<div class=\"riga-colori\">"+comb()+       
+        "</div>"+
+        "<div style=\"flex-grow: 1;\"></div>"+
+        "<div class=\"pulsanti\" style=\"justify-content: space-around;\">"+
+            "<a class=\"buttones r\" onClick=\"document.location.reload(true)\" style=\"height: 4em; background-color: orange;\">Riprova</a>"+
+            "<a class=\"buttones r\" style=\"height: 4em;\" href=\"index.html\">Abbandona</a>"+
+        "</div>"+
+        "<div style=\"flex-grow: 1;\"></div>"
+        ; 
+        }
+    }
+
+    function genera(){
+        if(v==nc){
+            for(i=0;i!=nc;i++){
+                temparray[i]=array[i]
+            }
+            document.getElementById("pagina1").style.display = "none"
+            document.getElementById("pagina1").innerHTML = ""
+            document.getElementById("pagina2").style.display = "flex"
+            reset()
+        }else{
+            //non hai inserito tutti i colori
+        }    
+    }
+
+    function comb(){
+        var g=""
+        for(var i=0;i!=nc;i++){
+              g+= "<a class=\"riga-colonna " +temparray[i]+"\"></a>  " 
+            }
+        return g    
+    }
+    
+    function random(){  
+        //array temporanea    
+        var numbersArr = ['b','y','g','r','n','m','br','w','l','c'];
+
+        for(var i=0;i!=nc;i++){
+            //randomizza un numero massimo della lunghezza dell'array temporaneo 
+            var j = Math.floor(Math.random() * (numbersArr.length));
+            //assegna alla variabile globale il valore dell'array temporaneo nella posizione calcolata precedentemente
+            temparray[i]=numbersArr[j]
+            //elimina il valore dell'array nella posizione calcolata(im modo che non si ripresenti nell'array temporanea)
+            numbersArr.splice(j,1)
+        }
+    }
+
+
+    
+</script>

@@ -1,0 +1,210 @@
+<html>
+<head>
+    <meta name="viewport" content="width=device-width">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>    
+    <!-- pagina messaggio di vittoria sconfitta    -->
+    <div class="messaggio" id="mess">
+        <div style="flex-grow: 1;"></div> 
+    </div> 
+    <!-- pagina di gioco -->
+    <div class="Pagina1">
+            <h1>Mastermind</h1>     
+            <div class="tabella">
+                <div style="display: flex; flex-direction: column;">
+                    <!-- riga colore verificati -->
+                    <div class="colonne" id="colonnacolori">        
+                        
+                    </div>
+                    <!-- colori selezionati     -->
+                    <div class="riga-colori" style=" margin-bottom: 1em;" id="selezionecolori">
+                        <a class="riga-colonna bordo" id="c0"></a>
+                        <a class="riga-colonna bordo" id="c1"></a>
+                        <a class="riga-colonna bordo" id="c2"></a>
+                        <a class="riga-colonna bordo" id="c3"></a>
+                        <a class="riga-colonna bordo" id="c4"></a>
+                    </div>                 
+                </div>
+                <!-- colori da selezionare -->
+                <div class="colori">
+                    <button class="colore b" id="bb" onclick="selettore('b')"></button>
+                    <button class="colore y" id="by" onclick="selettore('y')"></button>
+                    <button class="colore g" id="bg" onclick="selettore('g')"></button>
+                    <button class="colore r" id="br" onclick="selettore('r')"></button>
+                    <button class="colore n" id="bn" onclick="selettore('n')"></button>
+                    <button class="colore m" id="bm" onclick="selettore('m')"></button>
+                    <button class="colore br" id="bbr" onclick="selettore('br')"></button>
+                    <button class="colore w" id="bw" onclick="selettore('w')"></button>
+                    <button class="colore l" id="bl" onclick="selettore('l')"></button>
+                    <button class="colore c" id="bc" onclick="selettore('c')"></button>
+                </div>
+                <!-- pulsanti  -->
+                <div class="pulsanti">
+                    <a class="buttones r" onclick="location.href='diff.html'">Abbandona</a>
+                    <a class="buttones" style="background-color: orange;" onclick="reset()">Reset</a>
+                    <a class="buttones g" onclick="verifica()">Check</a>
+                </div>
+            </div> 
+    </div>
+</body>
+</html>
+
+<script>
+    var nc=5;       //numero colori questa variabile cambia in base al numero di colori che bisogna far indovinare
+    var t=5;        //numero tentativi 
+    var tent=0;     //tentativo corrente variabile globale NON MODIFICARE
+    var v=0;        //Selettore riga colori da indovinare NON MODIFICARE
+    var array=[]    //array di colori creata dal giocatore 
+
+    var check=0;    //variabile verifica (verifica se tutti i colori selezionati sono corretti quando a 0 nessuno corretto a N numero colori tutti corretti)
+    
+    var temparray=[]; //variabile temporanea combinazione corretta inizializzata a 0 poi generata da random()
+
+    //richiamo la funzione per generare la combinazione
+    random();
+
+    //funzione di selezione
+    function selettore(c){   
+        //verifica se il punto selezionato esista(non oltre i cerchi presenti)    
+        if(v!=nc){
+            //assegna alla variabile id(usata per prendere l'id del bottone da colorare)
+            var id="c"+v
+            //prendo l'elemento con l'ind(cerchio bianco) e gli assegno la variabile passata dal bottone(richiamo della funzione)
+            var s=document.getElementById(id)
+            s.classList.add(c)
+            //assegna ad inb(id bottone) in valore passato dalla funzione e disabilità l'elemento corrispondente a quel id
+            var idb="b"+c
+            document.getElementById(idb).disabled = true
+            //assegna lla posizione v(es 0) il contenuto della variabile c(variabile passata)
+            array[v]=c
+            //incrementa la variabile di selezione
+            v++
+        }
+    }
+
+    //funzione di reset della selezione
+    function reset(){
+        //ciclo per nc che rimuove le classi dei colori ai bottoni e rimuove il contenuto dell'array
+        for(var i=0;i!=nc;i++){
+            var id="c"+i;
+            var s=document.getElementById(id)
+            s.classList.remove('b','y','g','r','n','m','br','w','l','c')
+            v=0
+            array[i]="";
+        }
+        //riabilita tutti i bottoni
+        for(var i=0;i!=10;i++){
+            var a=["bb","by","bg","br","bn",'bm','bbr','bw','bl','bc']
+            document.getElementById(a[i]).disabled = false
+        }
+        check=0
+    }
+    
+    function verifica(){
+        if(v==nc){
+            var node=""
+            for(var i=0;i!=nc;i++){
+
+
+
+                chech=0
+                //verifica posizione
+                if(array[i]==temparray[i]){
+                    node += "<a class=\"riga-colonna err3 "+array[i]+"\" ></a>"
+                    check++
+                }else if(temparray.includes(array[i])){
+                    node += "<a class=\"riga-colonna err2 "+array[i]+"\" ></a>"
+                    
+                }else{
+                    node += "<a class=\"riga-colonna err1 "+array[i]+"\" ></a>"
+                    
+                }
+                
+            }
+            node="<div class=\"riga-colori\">"+node+"</div>"
+
+            document.getElementById("colonnacolori").innerHTML+=node;
+            // alert(check)
+            
+            tentativi()
+            reset()
+        }else{
+            //non hai inserito tutti i colori
+        }
+    }
+
+    //funzione che verifica i tentativi
+    function tentativi(){
+        //incrementa i tentativi
+        tent++;
+        // verifica se i colori corretti corrispondono ai numero dei colori
+        if(check==nc){
+            //rendi visibile il messaggio e visualizza tutte le info correlate alla vittoria
+            document.getElementById("mess").style.display = "flex"
+            document.getElementById("mess").style.backgroundColor ="#c0ffba"
+
+            document.getElementById("mess").innerHTML += " <h1>Hai Vinto</h1>"+
+            " <div style=\"flex-grow: 1;\"></div>"+
+            "<h3>Complimenti hai usato "+tent+" su "+t+ " tentativi</h3>"+
+            " <p>Combinazione corretta</p>"+
+            "<div class=\"riga-colori\">"+comb()+
+            "</div>"+
+            "<div style=\"flex-grow: 1;\"></div>"+
+            "<div class=\"pulsanti\" style=\"justify-content: space-around;\">"+
+            "<a class=\"buttones r\" onClick=\"document.location.reload(true)\" style=\"height: 4em; background-color: orange;\">Riprova</a>"+
+            "<a class=\"buttones r\" style=\"height: 4em;\" href=\"index.html\">Abbandona</a>"+
+            "</div>"+
+            "<div style=\"flex-grow: 1;\"></div>"
+            ;  
+        //verifica se i tentativi correnti corrispondono al numero massimo di tentativi    
+        }else if(tent==t){
+            //rendi visibile il messaggio e visualizza tutte le info correlate alla sconfitta
+            document.getElementById("mess").style.display = "flex"
+            document.getElementById("mess").style.backgroundColor ="#ff6666"
+
+            document.getElementById("mess").innerHTML += " <h1>Non hai vinto</h1>"+
+            " <div style=\"flex-grow: 1;\"></div>"+
+            "<h3>Hai usato tutti i "+t+" tentativi</h3>"+
+            "<p>Combinazione corretta</p>"+
+            "<div class=\"riga-colori\">"+comb()+       
+            "</div>"+
+            "<div style=\"flex-grow: 1;\"></div>"+
+            "<div class=\"pulsanti\" style=\"justify-content: space-around;\">"+
+            "<a class=\"buttones r\" onClick=\"document.location.reload(true)\" style=\"height: 4em; background-color: orange;\">Riprova</a>"+
+            "<a class=\"buttones r\" style=\"height: 4em;\" href=\"index.html\">Abbandona</a>"+
+            "</div>"+
+            "<div style=\"flex-grow: 1;\"></div>"
+            ; 
+        }
+    }
+
+    //funzione che visualizza la combinazione corretta
+    function comb(){
+        //crea una variabile di testo
+        var g=""
+        for(var i=0;i!=nc;i++){
+            //crea una stringa con i colori corretti
+            g+= "<a class=\"riga-colonna " +temparray[i]+"\"></a>  " 
+        }
+        //restituisce la stringa da stampare nel messaggio
+        return g    
+    }
+    
+    //funzione genera la combinazione senza ripetizioni
+    function random(){  
+        //array temporanea    
+        var numbersArr = ['b','y','g','r','n','m','br','w','l','c'];
+
+        for(var i=0;i!=nc;i++){
+            //randomizza un numero massimo della lunghezza dell'array temporaneo 
+            var j = Math.floor(Math.random() * (numbersArr.length));
+            //assegna alla variabile globale il valore dell'array temporaneo nella posizione calcolata precedentemente
+            temparray[i]=numbersArr[j]
+            //elimina il valore dell'array nella posizione calcolata(im modo che non si ripresenti nell'array temporanea)
+            numbersArr.splice(j,1)
+        }
+    }
+ 
+</script>
